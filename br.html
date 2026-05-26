@@ -378,7 +378,7 @@
       <div class="secure">Ваши личные данные будут в безопасности</div>
     </div>
     <div class="modal-actions">
-      <button class="modal-btn" id="modalCancelBtn">Отмена</button>
+      
       <button class="modal-btn" id="modalStartBtn">Начать</button>
     </div>
   </div>
@@ -475,16 +475,7 @@
       mainPlayBtn.addEventListener('click', handleMainPlayClick);
     }
     
-    // Также добавим возможность закрыть модалку при клике на оверлей (по желанию)
-    const modalOverlay = document.getElementById('authModal');
-    if (modalOverlay) {
-      modalOverlay.addEventListener('click', function(e) {
-        // Закрываем только если клик был именно по фону (overlay), а не по содержимому modal-box
-        if (e.target === modalOverlay) {
-          closeModal();
-        }
-      });
-    }
+    // Закрытие по клику на оверлей отключено — модалка не закрывается
   }
 
   // --- Автоматическое открытие модалки через 1.5 секунды, но только если оно еще не открыто (для удобства) ---
