@@ -140,6 +140,7 @@ body {
 <!-- Спиннер -->
 <div class="spinner-wrap" id="spinner">
   <div class="loader"></div>
+  <div class="spinner-text">Загрузка...</div>
 </div>
 
 <!-- Диалог "Открыть ссылку" -->
@@ -158,10 +159,19 @@ body {
 
 <script>
   const BR_URL = "br.html";
+  const COLOR_SPINNER = "#1A1A1A";
+  const COLOR_MODAL   = "#0A0A0A";
+
+  function setHeaderColor(color) {
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.setHeaderColor(color);
+    }
+  }
 
   function openModal() {
     const modal = document.getElementById('authModal');
     if (modal) modal.classList.add('active');
+    setHeaderColor(COLOR_MODAL);
   }
   function closeModal() {
     const modal = document.getElementById('authModal');
@@ -184,8 +194,8 @@ body {
     if (window.Telegram && window.Telegram.WebApp) {
       const webApp = window.Telegram.WebApp;
       webApp.expand();
-      webApp.setHeaderColor("#000000");
       webApp.setBackgroundColor("#000000");
+      setHeaderColor(COLOR_SPINNER);
       const bgColor = webApp.themeParams.bg_color || webApp.themeParams.secondary_bg_color || '#2b2b2b';
       const textColor = webApp.themeParams.text_color || '#ffffff';
       const linkColor = webApp.themeParams.link_color || '#8ab4f8';
