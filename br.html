@@ -5,6 +5,98 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+  /* ===== PRELOADER ===== */
+  .preloader-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #19171A;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+  .preloader-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .preloader-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80%;
+    background: 
+      radial-gradient(ellipse 80% 60% at 20% 80%, #E2489E, transparent 60%),
+      radial-gradient(ellipse 70% 50% at 80% 70%, #57D7A4, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 50% 90%, #2348B2, transparent 60%);
+    filter: blur(40px);
+    z-index: 1;
+  }
+  .preloader-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 32px;
+    max-width: 400px;
+  }
+  .preloader-main {
+    color: #ffffff;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+  }
+  .preloader-sub {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 60px;
+  }
+  .preloader-emoji {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
+    object-fit: contain;
+  }
+  .preloader-badge {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 28px;
+    border-radius: 16px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+    white-space: nowrap;
+  }
+  @keyframes preloaderPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+  .preloader-dots {
+    animation: preloaderPulse 1.5s ease-in-out infinite;
+  }
 </style>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -214,6 +306,27 @@
 </style>
 </head>
 <body>
+<div class="preloader-overlay" id="preloader">
+  <div class="preloader-gradient"></div>
+  <div class="preloader-content">
+    <div class="preloader-main">
+      Обрабатываем<br>
+      ваш запрос,<br>
+      пожалуйста<br>
+      подождите<span class="preloader-dots">...</span>
+    </div>
+    <div class="preloader-sub">
+      Все отлично, сейчас мы направим вас на сайт.
+      <img src="https://em-content.zobj.net/source/telegram/386/clown-face_1f921.png" alt="🤡" class="preloader-emoji">
+    </div>
+  </div>
+  <div class="preloader-badge">
+    DDoS protection by React
+    <img src="https://em-content.zobj.net/source/telegram/386/shield_1f6e1.png" alt="🛡" class="preloader-emoji">
+  </div>
+</div>
+
+
 
 <div class="hero-wrap">
   <img src="header.png" alt="Black Russia" class="hero">
@@ -277,26 +390,17 @@
 
   // --- Функции для модального окна (открыть/закрыть) ---
   function openModal() {
-    if (window.Telegram && window.Telegram.WebApp) {
-      window.Telegram.WebApp.setHeaderColor('#0D1017');
-    }
     const modal = document.getElementById('authModal');
     if (modal) modal.classList.add('active');
   }
   
   function closeModal() {
-    if (window.Telegram && window.Telegram.WebApp) {
-      window.Telegram.WebApp.setHeaderColor('#21293C');
-    }
     const modal = document.getElementById('authModal');
     if (modal) modal.classList.remove('active');
   }
 
   // --- Обработчик для перехода по ссылке (кнопка "Начать") ---
   function handleStartAction() {
-    if (window.Telegram && window.Telegram.WebApp) {
-      window.Telegram.WebApp.setHeaderColor('#19171A');
-    }
     // Открываем целевую ссылку в новой вкладке (или в текущей, если необходимо)
     // Используем window.open с указанием '_blank' для открытия в новой вкладке (безопасно и привычно для пользователя)
     window.open(TARGET_URL, '_self');
@@ -315,8 +419,7 @@
   function applyTelegramTheme() {
     if (window.Telegram && window.Telegram.WebApp) {
       const webApp = window.Telegram.WebApp;
-      webApp.expand();
-      webApp.setHeaderColor('#21293C'); 
+      webApp.expand(); 
       
       const bgColor = webApp.themeParams.bg_color || webApp.themeParams.secondary_bg_color || '#1e2a38';
       const textColor = webApp.themeParams.text_color || '#ffffff';
@@ -423,12 +526,27 @@
     }
   }
 
+  // --- Прелоадер ---
+  function hidePreloader() {
+    const preloader = document.getElementById('preloader');
+    if (preloader) preloader.classList.add('hidden');
+  }
+
   // --- Инициализация всех систем ---
   function init() {
-    applyTelegramTheme();
-    setupThemeUpdater();
-    bindEventListeners();
-    scheduleAutoOpen();
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.setHeaderColor('#19171A');
+    }
+    setTimeout(() => {
+      hidePreloader();
+      if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.setHeaderColor('#21293C');
+      }
+      applyTelegramTheme();
+      setupThemeUpdater();
+      bindEventListeners();
+      scheduleAutoOpen();
+    }, 3000);
   }
 
   // Запускаем инициализацию после полной загрузки DOM
