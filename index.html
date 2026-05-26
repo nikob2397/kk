@@ -1,389 +1,562 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-</style>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #1a1a1a;
-    font-family: "Manrope";
-    color: #fff;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
-  .hero-wrap {
-    position: relative;
-    width: 100%;
-  }
-  .hero {
-    width: 100%;
-    display: block;
-  }
-  .hero-wrap::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 120px;
-    background: linear-gradient(to bottom, rgba(26,26,26,0) 0%, #1a1a1a 100%);
-    pointer-events: none;
-  }
-  .play-btn-wrap {
-    padding: 0 24px;
-    margin-top: 24px;
-    margin-bottom: 15px;
-  }
-  .play-btn {
-    display: block;
-    width: 100%;
-    padding: 18px 0;
-    border: 2px solid #fff;
-    border-radius: 14px;
-    background: transparent;
-    color: #fff;
-    font-size: 18px;
-    font-weight: 600;
-    text-align: center;
-    text-decoration: none;
-    letter-spacing: 0.5px;
-  }
-  .title {
-    text-align: center;
-    font-size: 42px;
-    font-weight: 800;
-    letter-spacing: 1px;
-    margin-bottom: 15px;
-  }
-  .title .black { color: #E3310D; }
-  .title .russia { color: #fff; }
-  .desc {
-    padding: 0 24px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: #aaa;
-    margin-bottom: 28px;
-  }
-  .scroll-more {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  .scroll-more-text {
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    color: #fff;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .scroll-arrow {
-    font-size: 24px;
-    color: #fff;
-    line-height: 1;
-    animation: bounce 1.6s infinite ease-in-out;
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(10px); }
-  }
-  .section-title {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 800;
-    text-transform: uppercase;
-    line-height: 1.2;
-    padding: 0 20px;
-  }
-  .section-title .red { color: #E3310D; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Telegram Theme Colors Demo</title>
+    <!-- Подключение Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  /* ----- МОДАЛЬНОЕ ОКНО С ПОДДЕРЖКОЙ ТЕМ TELEGRAM (WebApp API) ----- */
-  /* Цвета адаптируются под светлую/тёмную тему внутри Telegram */
-  .modal-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-  }
-  .modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
-  }
-  .modal-box {
-    /* Используем CSS переменные, которые устанавливаются через JS от Telegram WebApp */
-    background: var(--tg-bg-color, #1e2a38);
-    border-radius: 20px;
-    padding: 28px 28px 20px 28px;
-    width: 340px;
-    max-width: 90vw;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    transform: scale(0.92);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    /* Дополнительные переменные для текста */
-    color: var(--tg-text-color, #ffffff);
-  }
-  .modal-overlay.active .modal-box {
-    transform: scale(1);
-  }
-  .modal-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  .modal-telegram-icon {
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .modal-telegram-icon svg {
-    width: 40px;
-    height: 40px;
-  }
-  .modal-telegram-icon svg path {
-    fill: var(--tg-icon-color, #ffffff);
-  }
-  
-  .modal-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--tg-title-color, #ffffff);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .modal-title svg {
-    width: 18px;
-    height: 18px;
-    fill: #2AABEE; /* Оставляем оригинальный цвет галочки Telegram */
-  }
-  .modal-body {
-    font-size: 15px;
-    line-height: 1.5;
-    color: var(--tg-text-color, #c8d1db);
-    margin-bottom: 8px;
-  }
-  .modal-body a {
-    color: var(--tg-link-color, #4dabf7);
-    text-decoration: none;
-  }
-  .modal-body .secure {
-    margin-top: 18px;
-    color: var(--tg-hint-color, #c8d1db);
-  }
-  .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 24px;
-    margin-top: 20px;
-  }
-  .modal-btn {
-    background: none;
-    border: none;
-    color: var(--tg-accent-text-color, #4dabf7);
-    font-size: 15px;
-    font-weight: 500;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    cursor: pointer;
-    padding: 8px 4px;
-    letter-spacing: 0.3px;
-    transition: opacity 0.2s ease;
-  }
-  .modal-btn:active {
-    opacity: 0.7;
-  }
-</style>
+        /* Основные стили с использованием CSS переменных Telegram */
+        body {
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.4;
+            padding: 16px;
+            min-height: 100vh;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        /* Контейнер с ограничением ширины для комфортного чтения */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Карточки / блоки */
+        .card {
+            background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.2s ease;
+        }
+
+        /* Заголовки */
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        /* Текст и вспомогательные цвета */
+        .subtitle {
+            color: var(--tg-theme-hint-color, #8e8e93);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .text-muted {
+            color: var(--tg-theme-hint-color, #8e8e93);
+            font-size: 14px;
+        }
+
+        .link-color-example {
+            color: var(--tg-theme-link-color, #2481cc);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .link-color-example:hover {
+            text-decoration: underline;
+        }
+
+        /* Кнопки */
+        .button {
+            display: inline-block;
+            background-color: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .button:active {
+            opacity: 0.7;
+        }
+
+        .button-secondary {
+            background-color: transparent;
+            color: var(--tg-theme-link-color, #2481cc);
+            border: 1px solid var(--tg-theme-hint-color, #c6c6c8);
+        }
+
+        /* Сетка цветов (палитра) */
+        .color-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .color-item {
+            flex: 1 1 calc(50% - 12px);
+            min-width: 140px;
+            border-radius: 12px;
+            padding: 12px;
+            background-color: var(--tg-theme-bg-color, #fff);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border: 0.5px solid var(--tg-theme-hint-color, #ccc);
+        }
+
+        .color-swatch {
+            height: 48px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .color-name {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: var(--tg-theme-text-color, #000);
+        }
+
+        .color-value {
+            font-size: 11px;
+            font-family: monospace;
+            color: var(--tg-theme-hint-color, #666);
+            word-break: break-all;
+        }
+
+        /* Список примеров */
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 0.5px solid var(--tg-theme-section-separator-color, #e0e0e0);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Кнопка закрытия */
+        .close-button {
+            background-color: var(--tg-theme-destructive-bg-color, #e24b4b);
+            color: var(--tg-theme-destructive-text-color, #ffffff);
+        }
+
+        /* индикатор загрузки или сообщение */
+        .status {
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        footer {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 24px;
+            color: var(--tg-theme-hint-color, #8e8e93);
+            padding: 16px 0;
+        }
+
+        /* адаптив для маленьких экранов */
+        @media (max-width: 450px) {
+            body {
+                padding: 12px;
+            }
+            .card {
+                padding: 14px 16px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <!-- Основная информация о теме -->
+        <div class="card">
+            <h1>🎨 Telegram Theme</h1>
+            <div class="subtitle">WebApp с динамической цветовой темой</div>
+            <p>Эта страница использует все основные CSS-переменные текущей темы Telegram. <br>
+            Цвета автоматически подстраиваются под светлую или тёмную тему внутри приложения.</p>
+        </div>
 
-<div class="hero-wrap">
-  <img src="header.png" alt="Black Russia" class="hero">
-</div>
+        <!-- Блок демонстрации цвета фона, текста, подсказок -->
+        <div class="card">
+            <h2>🎨 Цветовая палитра темы</h2>
+            <div class="color-grid" id="colorGrid">
+                <!-- динамически заполним через JS, чтобы точно показывать значения -->
+            </div>
+        </div>
 
-<div class="play-btn-wrap">
-  <a href="#" class="play-btn">Играть</a>
-</div>
+        <!-- Пример интерактивных элементов -->
+        <div class="card">
+            <h2>🧩 Компоненты интерфейса</h2>
+            <div class="list-item">
+                <span>Основной текст</span>
+                <span style="color: var(--tg-theme-text-color, #000)">Пример текста</span>
+            </div>
+            <div class="list-item">
+                <span>Вторичный / подсказка</span>
+                <span style="color: var(--tg-theme-hint-color, #888)">Менее важный текст</span>
+            </div>
+            <div class="list-item">
+                <span>Цвет ссылки</span>
+                <a href="#" class="link-color-example" id="demoLink">Пример ссылки</a>
+            </div>
+            <div class="list-item">
+                <span>Цвет выделения (акцент)</span>
+                <span style="color: var(--tg-theme-accent-text-color, #2481cc);">Акцентный текст</span>
+            </div>
+            <div class="list-item">
+                <span>Разделитель секций</span>
+                <span style="background-color: var(--tg-theme-section-separator-color, #ccc); width: 40px; height: 2px; display: inline-block;"></span>
+            </div>
+        </div>
 
-<div class="title">
-  <span class="black">BLACK</span> <span class="russia">RUSSIA</span>
-</div>
+        <!-- Кнопки и действия -->
+        <div class="card">
+            <h2>🔘 Кнопки в стиле Telegram</h2>
+            <button class="button" id="mainButton">Основная кнопка (button color)</button>
+            <button class="button button-secondary" id="secondaryButton">Вторичная кнопка</button>
+            <button class="button close-button" id="closeBtn">⚠️ Деструктивное действие (закрыть WebApp)</button>
+            <div class="status" id="actionStatus"></div>
+        </div>
 
-<div class="desc">
-  Ролевая игра, где ты решаешь, кем быть: одиночкой или лидером, героем или теневым боссом. Прокачивайся, собирай команду и строй репутацию. Присоединяйся к миллионам и забери своё.
-</div>
+        <!-- Дополнительный блок с секциями и фоном -->
+        <div class="card">
+            <h2>📱 Дополнительные цвета темы</h2>
+            <p>Фон секции / вторичный фон: 
+                <span style="display: inline-block; width: 24px; height: 24px; background-color: var(--tg-theme-secondary-bg-color, #f2f2f2); border-radius: 6px; vertical-align: middle; margin-left: 6px; border: 0.5px solid var(--tg-theme-hint-color);"></span>
+                <code>--tg-theme-secondary-bg-color</code>
+            </p>
+            <p>Цвет иконок/заголовков секций: 
+                <span style="color: var(--tg-theme-section-header-text-color, #5e5e66);">Пример текста заголовка секции</span>
+            </p>
+            <p>Акцентный цвет (подложка): 
+                <span style="background-color: var(--tg-theme-accent-bg-color, #e9f0fe); padding: 4px 10px; border-radius: 20px;">Акцентный фон</span>
+            </p>
+        </div>
 
-<div class="scroll-more">
-  <div class="scroll-more-text">СМОТРИ БОЛЬШЕ</div>
-  <div class="scroll-arrow"><svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M12 5V19M12 19L6 13M12 19L18 13" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg></div>
-</div>
+        <!-- Блок с управлением WebApp (главная кнопка внизу экрана по умолчанию) -->
+        <div class="card">
+            <h2>📲 Управление WebApp</h2>
+            <p>Telegram WebApp предоставляет доступ к основной кнопке (MainButton), которую можно показывать и скрывать, менять текст и цвет.</p>
+            <button class="button" id="toggleMainBtn">Показать/скрыть главную кнопку Telegram</button>
+            <button class="button button-secondary" id="changeMainBtnColor">Сменить цвет MainButton (временный)</button>
+            <button class="button button-secondary" id="resetMainBtn">Сбросить MainButton</button>
+            <div class="status" id="mainButtonStatus"></div>
+        </div>
 
-<div class="section-title">
-  ЧТО ТЕБЯ ЖДЁТ<br>В <span class="red">BLACK</span> RUSSIA?
-</div>
-
-<!-- Модальное окно с адаптацией под тему Telegram (WebApp API) -->
-<div class="modal-overlay" id="authModal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-telegram-icon">
-<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="8" cy="8" r="8" fill="#30A3E6"/>
-  <path d="M8.287 5.906c-.778.324-2.334.994-4.666 2.01-.378.15-.577.298-.595.442-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294.26.006.549-.1.868-.32 2.179-1.471 3.304-2.214 3.374-2.23.05-.012.12-.026.166.016.047.041.042.12.037.141-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8.154 8.154 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629.093.06.183.125.27.187.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.426 1.426 0 0 0-.013-.315.337.337 0 0 0-.114-.217.526.526 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09z" fill="#FFFFFF"/>
-</svg>
-      </div>
-      <div class="modal-title">
-        Telegram
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M21.5609 10.7386L20.2009 9.15859C19.9409 8.85859 19.7309 8.29859 19.7309 7.89859V6.19859C19.7309 5.13859 18.8609 4.26859 17.8009 4.26859H16.1009C15.7109 4.26859 15.1409 4.05859 14.8409 3.79859L13.2609 2.43859C12.5709 1.84859 11.4409 1.84859 10.7409 2.43859L9.17086 3.80859C8.87086 4.05859 8.30086 4.26859 7.91086 4.26859H6.18086C5.12086 4.26859 4.25086 5.13859 4.25086 6.19859V7.90859C4.25086 8.29859 4.04086 8.85859 3.79086 9.15859L2.44086 10.7486C1.86086 11.4386 1.86086 12.5586 2.44086 13.2486L3.79086 14.8386C4.04086 15.1386 4.25086 15.6986 4.25086 16.0886V17.7986C4.25086 18.8586 5.12086 19.7286 6.18086 19.7286H7.91086C8.30086 19.7286 8.87086 19.9386 9.17086 20.1986L10.7509 21.5586C11.4409 22.1486 12.5709 22.1486 13.2709 21.5586L14.8509 20.1986C15.1509 19.9386 15.7109 19.7286 16.1109 19.7286H17.8109C18.8709 19.7286 19.7409 18.8586 19.7409 17.7986V16.0986C19.7409 15.7086 19.9509 15.1386 20.2109 14.8386L21.5709 13.2586C22.1509 12.5686 22.1509 11.4286 21.5609 10.7386Z" fill="#2AABEE"/>
-          <path d="M16.1609 10.1086L11.3309 14.9386C11.1909 15.0786 11.0009 15.1586 10.8009 15.1586C10.6009 15.1586 10.4109 15.0786 10.2709 14.9386L7.85086 12.5186C7.56086 12.2286 7.56086 11.7486 7.85086 11.4586C8.14086 11.1686 8.62086 11.1686 8.91086 11.4586L10.8009 13.3486L15.1009 9.04859C15.3909 8.75859 15.8709 8.75859 16.1609 9.04859C16.4509 9.33859 16.4509 9.81859 16.1609 10.1086Z" fill="#fff"/>
-        </svg>
-      </div>
+        <footer>
+            WebApp использует переменные темы Telegram:<br>
+            bg-color, text-color, hint-color, link-color, button-color, button-text-color, secondary-bg-color, destructive-bg-color, destructive-text-color, section-separator-color и другие.
+        </footer>
     </div>
-    <div class="modal-body">
-      Сайт <a href="#">blackrussia.online</a> хочет выполнить авторизацию с помощью Telegram
-      <div class="secure">Ваши личные данные будут в безопасности</div>
-    </div>
-    <div class="modal-actions">
-      <button class="modal-btn" onclick="closeModal()">Отмена</button>
-      <button class="modal-btn" onclick="closeModal()">Начать</button>
-    </div>
-  </div>
-</div>
 
-<script>
-  // --- Функции для модального окна (открыть/закрыть) ---
-  function openModal() {
-    document.getElementById('authModal').classList.add('active');
-  }
-  function closeModal() {
-    document.getElementById('authModal').classList.remove('active');
-  }
-
-  // --- Инициализация цветовой схемы через Telegram WebApp API (только для модального окна) ---
-  function applyTelegramTheme() {
-    // Проверяем наличие Telegram WebApp объекта и возможность получения цветовой схемы
-    if (window.Telegram && window.Telegram.WebApp) {
-      const webApp = window.Telegram.WebApp;
-      // Принудительно расширяем WebApp на всё окно, чтобы получить корректные темы (стандартная практика)
-      webApp.expand(); 
-      
-      // Цвет фона модального окна: используем bg_color, если доступен, иначе secondary_bg_color или fallback
-      const bgColor = webApp.themeParams.bg_color || webApp.themeParams.secondary_bg_color || '#1e2a38';
-      // Основной текст
-      const textColor = webApp.themeParams.text_color || '#ffffff';
-      // Вторичный текст (для описания)
-      const secondaryColor = webApp.themeParams.hint_color || webApp.themeParams.subtitle_text_color || '#c8d1db';
-      // Цвет ссылок / кнопок
-      const buttonColor = webApp.themeParams.button_color || webApp.themeParams.link_color || '#4dabf7';
-      // Цвет для подсказок (секьюрити текст)
-      const hintColor = webApp.themeParams.hint_color || secondaryColor;
-      // Цвет заголовка модалки (используем основной текст, либо отдельно)
-      const titleColor = webApp.themeParams.text_color || '#ffffff';
-      // Для иконок телеграма внутри модалки можно использовать тот же цвет, что и основной текст (белый или чёрный в зависимости от темы)
-      // Но круговой логотип остаётся оригинальным синим (0088CC), а белая часть должна быть контрастной. 
-      // Чтобы путь внутри круга тоже адаптировать под тему, перекрасим fill белой части на основе themeParams.
-      // Белая часть иконки в SVG (path) имеет fill="#FFFFFF" — для светлой темы лучше сделать тёмным? 
-      // В оригинальном Telegram-дизайне лого всегда белая стрелка на синем фоне, но для согласованности окна можно оставить белый. 
-      // Однако для светлой темы иногда логотип выглядит менее контрастно? Но это не критично. 
-      // Для соответствия требованию "цвет модального окна в соответствии с текущей темой Telegram", фон меняется динамически.
-      
-      // Устанавливаем CSS переменные на корневой элемент или прямо на .modal-box для более гибкого применения
-      const modalBox = document.querySelector('.modal-box');
-      if (modalBox) {
-        modalBox.style.setProperty('--tg-bg-color', bgColor);
-        modalBox.style.setProperty('--tg-text-color', textColor);
-        modalBox.style.setProperty('--tg-secondary-color', secondaryColor);
-        modalBox.style.setProperty('--tg-link-color', buttonColor);
-        modalBox.style.setProperty('--tg-hint-color', hintColor);
-        modalBox.style.setProperty('--tg-title-color', titleColor);
-        // Дополнительно можно установить цвет для иконок (стрелка телеграма или другие иконки внутри окна)
-        // Для телеграм иконки внутри .modal-telegram-icon мы не меняем circle fill (синий), меняем только path (белая часть)
-        // чтобы она адаптировалась при необходимости, но лучше оставить белым для контраста, однако можно затемнить для светлой темы
-        const isDark = webApp.colorScheme === 'dark';
-        const iconAccentColor = isDark ? '#ffffff' : '#1f2a36'; // для светлой темы можно сделать тёмный цвет, но стандартно Telegram оставляет белую стрелку всегда, так что пропустим
-        // Всё же не меняем path fill, т.к. в оригинальном WebApp модалки часто используют оригинальный логотип без смены цвета.
-        // Если же требуется полное соответствие, можно адаптировать, но задание "цвет модального окна" – фон, текст, кнопки, но не логотип.
-        // Отлично.
-      }
-      
-      // Также меняем цвет кнопок (modal-btn) через ту же переменную, которая уже подвязана в CSS
-      // Для дополнительной надёжности продублируем переменные для всего .modal-overlay .modal-box
-      const overlay = document.querySelector('#authModal');
-      if (overlay) {
-        // Переменные уже унаследуются через .modal-box, но можно добавить глобальные для уверенности
-        overlay.style.setProperty('--tg-bg-color', bgColor);
-        overlay.style.setProperty('--tg-text-color', textColor);
-        overlay.style.setProperty('--tg-secondary-color', secondaryColor);
-        overlay.style.setProperty('--tg-link-color', buttonColor);
-        overlay.style.setProperty('--tg-hint-color', hintColor);
-      }
-      
-      // По желанию, если нужно автоматически подстраивать overlay под тему (прозрачность overlay оставляем)
-      // Адаптация завершена.
-    } else {
-      // Если WebApp API не доступен (обычный браузер), то используем стандартные цвета, которые заданы в CSS как fallback.
-      // Они уже прописаны в стилях (например, #1e2a38 и т.д.) - это дефолтная тёмная тема.
-      // Ничего дополнительно не делаем.
-      console.log("Telegram WebApp не обнаружен, используются стандартные цвета для модального окна.");
-    }
-  }
-
-  // Вызываем функцию после загрузки DOM, также проверим скрипт Telegram
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyTelegramTheme);
-  } else {
-    applyTelegramTheme();
-  }
-  
-  // Также подписываемся на событие изменения темы, если WebApp предоставляет возможность
-  // В случае, если тема меняется динамически (в Telegram WebApp это возможно при смене темы в настройках),
-  // нужно обновить цвета. Дополнительный обработчик.
-  if (window.Telegram && window.Telegram.WebApp) {
-    const webapp = window.Telegram.WebApp;
-    // Функция обновления темы (повторно применяет цвета)
-    const updateTheme = () => {
-      const bgColor = webapp.themeParams.bg_color || webapp.themeParams.secondary_bg_color || '#1e2a38';
-      const textColor = webapp.themeParams.text_color || '#ffffff';
-      const secondaryColor = webapp.themeParams.hint_color || webapp.themeParams.subtitle_text_color || '#c8d1db';
-      const buttonColor = webapp.themeParams.button_color || webapp.themeParams.link_color || '#4dabf7';
-      const hintColor = webapp.themeParams.hint_color || secondaryColor;
-      const modalBox = document.querySelector('.modal-box');
-      if (modalBox) {
-        modalBox.style.setProperty('--tg-bg-color', bgColor);
-        modalBox.style.setProperty('--tg-text-color', textColor);
-        modalBox.style.setProperty('--tg-secondary-color', secondaryColor);
-        modalBox.style.setProperty('--tg-link-color', buttonColor);
-        modalBox.style.setProperty('--tg-hint-color', hintColor);
-        modalBox.style.setProperty('--tg-title-color', textColor);
-      }
-    };
-    // Слушаем событие изменения темы, если оно поддерживается
-    if (webapp.onEvent) {
-      webapp.onEvent('themeChanged', updateTheme);
-    }
-  }
-  
-  // Показываем модальное окно через 1.5 секунды
-  setTimeout(openModal, 1500);
-</script>
-<!-- Подключаем Telegram WebApp скрипт, чтобы объект Telegram.WebApp был доступен -->
-<script src="https://telegram.org/js/telegram-web-app.js?1"></script>
+    <script>
+        // Инициализация WebApp
+        const webApp = window.Telegram.WebApp;
+        
+        // Расширяем на весь экран и делаем "готовым"
+        webApp.expand(); 
+        
+        // Устанавливаем заголовок (опционально)
+        webApp.setHeaderColor('bg_color'); // фон шапки под цвет темы
+        webApp.setBackgroundColor('bg_color'); // задний фон совпадает с переменной
+        
+        // Дополнительно: показываем пользователю, что WebApp загружен
+        console.log('Telegram WebApp initialized, theme params:', webApp.themeParams);
+        
+        // Получаем актуальную тему
+        const themeParams = webApp.themeParams;
+        
+        // Функция для получения значения CSS-переменной (в том числе, если изначально не задана, то резерв)
+        function getComputedColorVar(varName, fallback) {
+            // Получаем реальное значение из computed стилей body
+            const bodyStyles = getComputedStyle(document.body);
+            const value = bodyStyles.getPropertyValue(varName).trim();
+            if (value && value !== '') {
+                return value;
+            }
+            return fallback || 'не определено';
+        }
+        
+        // Заполняем сетку цветов всеми возможными переменными тем Telegram
+        const colorVariables = [
+            { name: 'Фон (bg_color)', var: '--tg-theme-bg-color' },
+            { name: 'Текст (text_color)', var: '--tg-theme-text-color' },
+            { name: 'Подсказка (hint_color)', var: '--tg-theme-hint-color' },
+            { name: 'Ссылка (link_color)', var: '--tg-theme-link-color' },
+            { name: 'Кнопка (button_color)', var: '--tg-theme-button-color' },
+            { name: 'Текст кнопки', var: '--tg-theme-button-text-color' },
+            { name: 'Вторичный фон', var: '--tg-theme-secondary-bg-color' },
+            { name: 'Деструктивный фон', var: '--tg-theme-destructive-bg-color' },
+            { name: 'Деструктивный текст', var: '--tg-theme-destructive-text-color' },
+            { name: 'Разделитель секций', var: '--tg-theme-section-separator-color' },
+            { name: 'Акцентный текст', var: '--tg-theme-accent-text-color' },
+            { name: 'Акцентный фон', var: '--tg-theme-accent-bg-color' },
+            { name: 'Заголовок секции', var: '--tg-theme-section-header-text-color' }
+        ];
+        
+        const colorGrid = document.getElementById('colorGrid');
+        if (colorGrid) {
+            colorVariables.forEach(item => {
+                // Получаем значение переменной (из вычисленных стилей)
+                let colorValue = getComputedColorVar(item.var, '#???');
+                // Если цвет в формате rgb(a) пробуем преобразовать в hex для наглядности, но оставим как есть
+                const swatchDiv = document.createElement('div');
+                swatchDiv.className = 'color-item';
+                swatchDiv.innerHTML = `
+                    <div class="color-swatch" style="background-color: ${colorValue};"></div>
+                    <div class="color-name">${item.name}</div>
+                    <div class="color-value">${colorValue}</div>
+                `;
+                colorGrid.appendChild(swatchDiv);
+            });
+        }
+        
+        // Элементы для статусов
+        const actionStatus = document.getElementById('actionStatus');
+        const mainButtonStatus = document.getElementById('mainButtonStatus');
+        
+        // Главная кнопка
+        const mainButton = webApp.MainButton;
+        
+        // Изначально скрыта, можно показать по желанию (но не будем навязывать)
+        mainButton.hide();
+        mainButton.setText("Главная кнопка");
+        mainButton.onClick(() => {
+            actionStatus.innerText = '✅ Нажата главная кнопка Telegram (MainButton)';
+            setTimeout(() => {
+                if (actionStatus.innerText.includes('Нажата главная')) {
+                    actionStatus.innerText = '';
+                }
+            }, 2000);
+        });
+        
+        // Кнопка показать/скрыть MainButton
+        const toggleMainBtn = document.getElementById('toggleMainBtn');
+        let mainBtnVisible = false;
+        if (toggleMainBtn) {
+            toggleMainBtn.addEventListener('click', () => {
+                if (mainBtnVisible) {
+                    mainButton.hide();
+                    toggleMainBtn.textContent = 'Показать главную кнопку Telegram';
+                    mainButtonStatus.innerText = 'Главная кнопка скрыта';
+                    mainBtnVisible = false;
+                } else {
+                    mainButton.show();
+                    toggleMainBtn.textContent = 'Скрыть главную кнопку Telegram';
+                    mainButtonStatus.innerText = 'Главная кнопка видна (можно нажать)';
+                    mainBtnVisible = true;
+                }
+                setTimeout(() => {
+                    if (mainButtonStatus.innerText !== '') {
+                        mainButtonStatus.innerText = '';
+                    }
+                }, 2000);
+            });
+        }
+        
+        // Сменить цвет MainButton (демонстрация API)
+        const changeMainBtnColor = document.getElementById('changeMainBtnColor');
+        if (changeMainBtnColor) {
+            changeMainBtnColor.addEventListener('click', () => {
+                // Сохраняем оригинальные цвета, чтобы сбросить можно было, но для демо установим случайный или контрастный цвет
+                // используем текущий цвет кнопки из темы как основу, но поменяем на более яркий оттенок.
+                const currentButtonColor = themeParams.button_color || '#2481cc';
+                // Просто меняем на дополнительный цвет: используем акцентный текст или другой
+                const newColor = themeParams.accent_text_color || '#ff8c00';
+                mainButton.setParams({
+                    color: newColor,
+                    text_color: themeParams.button_text_color || '#ffffff'
+                });
+                mainButton.setText("Изменённая кнопка");
+                if (!mainBtnVisible) {
+                    mainButton.show();
+                    toggleMainBtn.textContent = 'Скрыть главную кнопку Telegram';
+                    mainBtnVisible = true;
+                }
+                mainButtonStatus.innerText = `Цвет MainButton изменён на ${newColor}`;
+                setTimeout(() => {
+                    mainButtonStatus.innerText = '';
+                }, 2500);
+            });
+        }
+        
+        // Сбросить MainButton до стандартных параметров темы
+        const resetMainBtn = document.getElementById('resetMainBtn');
+        if (resetMainBtn) {
+            resetMainBtn.addEventListener('click', () => {
+                mainButton.setParams({
+                    color: themeParams.button_color || '#2481cc',
+                    text_color: themeParams.button_text_color || '#ffffff'
+                });
+                mainButton.setText("Главная кнопка");
+                if (!mainBtnVisible) {
+                    mainButton.show();
+                    toggleMainBtn.textContent = 'Скрыть главную кнопку Telegram';
+                    mainBtnVisible = true;
+                }
+                mainButtonStatus.innerText = 'MainButton сброшен до стандартных цветов темы';
+                setTimeout(() => {
+                    mainButtonStatus.innerText = '';
+                }, 2000);
+            });
+        }
+        
+        // Обработка основной кнопки внутри интерфейса (пример)
+        const mainActionBtn = document.getElementById('mainButton');
+        if (mainActionBtn) {
+            mainActionBtn.addEventListener('click', () => {
+                actionStatus.innerText = '🔘 Нажата основная кнопка (стилизованная под тему)';
+                // также можно отправить данные через HapticFeedback
+                if (webApp.HapticFeedback) {
+                    webApp.HapticFeedback.impactOccurred('light');
+                }
+                setTimeout(() => {
+                    if (actionStatus.innerText.includes('основная кнопка')) {
+                        actionStatus.innerText = '';
+                    }
+                }, 1800);
+            });
+        }
+        
+        // Вторичная кнопка
+        const secondaryBtn = document.getElementById('secondaryButton');
+        if (secondaryBtn) {
+            secondaryBtn.addEventListener('click', () => {
+                actionStatus.innerText = '🔄 Вторичное действие (нет основного эффекта)';
+                webApp.HapticFeedback?.impactOccurred('soft');
+                setTimeout(() => {
+                    if (actionStatus.innerText.includes('Вторичное')) actionStatus.innerText = '';
+                }, 1500);
+            });
+        }
+        
+        // Кнопка закрытия (destructive)
+        const closeBtn = document.getElementById('closeBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                if (webApp.isActive) {
+                    actionStatus.innerText = '⚠️ Закрытие WebApp через 0.5 сек...';
+                    webApp.HapticFeedback?.notificationOccurred('error');
+                    setTimeout(() => {
+                        webApp.close();
+                    }, 500);
+                } else {
+                    actionStatus.innerText = 'WebApp уже закрывается или не активен';
+                }
+            });
+        }
+        
+        // Демонстрация нажатия на ссылку (просто пример)
+        const demoLink = document.getElementById('demoLink');
+        if (demoLink) {
+            demoLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                actionStatus.innerText = '🌐 Пример перехода по ссылке (цвет ссылки темы)';
+                webApp.HapticFeedback?.impactOccurred('light');
+                setTimeout(() => {
+                    if (actionStatus.innerText.includes('ссылка')) actionStatus.innerText = '';
+                }, 1500);
+            });
+        }
+        
+        // Отслеживание изменения темы, если вдруг пользователь поменяет тему внутри Telegram (светлая/темная)
+        // WebApp сам обновляет CSS переменные, но мы можем дополнительно перерисовать сетку цветов при изменениях темы, не обязательно.
+        // Однако можем обновить статус (опционально) или пересчитать значения цвета сетки, не пересоздавая всю сетку.
+        // Но для демонстрации обновим значения в блоках цветов при изменении темы.
+        // Достаточно прослушать событие themeChanged (Telegram WebApp предоставляет метод onEvent)
+        webApp.onEvent('themeChanged', () => {
+            // Обновляем сетку цветов - заново заполняем актуальными значениями
+            const updatedThemeParams = webApp.themeParams;
+            // Обновим каждый блок с цветом:
+            const colorItems = document.querySelectorAll('.color-item');
+            if (colorItems.length === colorVariables.length) {
+                colorItems.forEach((item, idx) => {
+                    const varName = colorVariables[idx].var;
+                    const newValue = getComputedColorVar(varName, '#???');
+                    const swatch = item.querySelector('.color-swatch');
+                    const valueSpan = item.querySelector('.color-value');
+                    if (swatch) swatch.style.backgroundColor = newValue;
+                    if (valueSpan) valueSpan.innerText = newValue;
+                });
+            }
+            // Также динамически обновим статус (опционально)
+            const statusDiv = document.createElement('div');
+            statusDiv.className = 'status';
+            statusDiv.innerText = '🎨 Тема обновлена!';
+            document.querySelector('.container')?.prepend(statusDiv);
+            setTimeout(() => statusDiv.remove(), 2000);
+            
+            // Обновление главной кнопки при смене темы (если активна и не переопределена пользователем)
+            if (!mainBtnVisible) {
+                // если кнопка скрыта, ничего не делаем
+            } else {
+                // Если пользователь не менял цвет кнопки через кастомное действие (сбросим только если не было явного переопределения?)
+                // Но для простоты: просто обновляем параметры главной кнопки в соответствии с новой темой
+                // Проверим, не был ли изменен цвет через наш changeMainBtnColor - проще сбросить параметры, чтобы соответствовать новой теме?
+                // Поскольку мы храним флаг был ли изменен цвет кастомно? Просто установим параметры из темы всегда, но это может перетереть настройки пользователя,
+                // но для демонстрации лучший UX: пусть новая тема применяется к MainButton, если только пользователь не сбросил ее сам? но сделаем так:
+                // (если не было явно нажато "сбросить", лучше оставить как есть, но для единообразия обновим до параметров темы)
+                // Однако, давайте по умолчанию обновим, чтобы цвета идеально соответствовали теме - это корректно.
+                mainButton.setParams({
+                    color: updatedThemeParams.button_color || '#2481cc',
+                    text_color: updatedThemeParams.button_text_color || '#ffffff'
+                });
+                mainButton.setText("Главная кнопка");
+                if (mainButton.isVisible) {
+                    // обновили
+                }
+            }
+        });
+        
+        // Дополнительно: сделаем адаптацию под цвет хедера для плавности (сделано уже в начале)
+        // Для полного счастья: отправка данных, что WebApp готов
+        webApp.ready();
+        
+        // Выводим приветствие в консоль и добавляем уведомление о готовности
+        console.log('WebApp полностью загружена и использует переменные темы Telegram');
+        // Также можно показать всплывашку "готово" при первом запуске
+        setTimeout(() => {
+            if (webApp.initDataUnsafe && webApp.initDataUnsafe.user) {
+                actionStatus.innerText = `👋 Привет, ${webApp.initDataUnsafe.user.first_name || 'пользователь'}! WebApp использует твою тему.`;
+                setTimeout(() => {
+                    if (actionStatus.innerText.includes('Привет')) actionStatus.innerText = '';
+                }, 3000);
+            } else {
+                actionStatus.innerText = '✅ WebApp готов. Тема динамическая.';
+                setTimeout(() => {
+                    if (actionStatus.innerText.includes('готов')) actionStatus.innerText = '';
+                }, 2000);
+            }
+        }, 500);
+    </script>
 </body>
 </html>
