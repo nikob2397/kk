@@ -3,127 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Black Russia</title>
-<link rel="preload" as="image" href="header.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 </style>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #1a1a1a;
-    font-family: "Manrope";
-    color: #fff;
-    overflow: hidden;
-    -webkit-font-smoothing: antialiased;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
-
-  /* ===== SPLASH SCREEN ===== */
-  #splash {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #19171A;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 99999;
-    transition: opacity 0.6s ease, visibility 0.6s ease;
-  }
-  #splash.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-  .splash-gradient {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 80%;
-    background: 
-      radial-gradient(ellipse 80% 60% at 20% 80%, #E2489E, transparent 60%),
-      radial-gradient(ellipse 70% 50% at 80% 70%, #57D7A4, transparent 60%),
-      radial-gradient(ellipse 60% 50% at 50% 90%, #2348B2, transparent 60%);
-    filter: blur(40px);
-    z-index: 1;
-  }
-  .splash-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    padding: 0 32px;
-    max-width: 400px;
-  }
-  .splash-main-text {
-    color: #ffffff;
-    font-size: 42px;
-    font-weight: 700;
-    line-height: 1.15;
-    margin-bottom: 24px;
-    letter-spacing: -0.5px;
-  }
-  .splash-sub-text {
-    color: rgba(255, 255, 255, 0.65);
-    font-size: 12px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 60px;
-  }
-  .splash-emoji {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-    display: inline-block;
-    vertical-align: middle;
-    object-fit: contain;
-  }
-  .splash-badge {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 12px 28px;
-    border-radius: 16px;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    z-index: 2;
-    white-space: nowrap;
-  }
-  @keyframes splash-pulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
-  .splash-dots {
-    animation: splash-pulse 1.5s ease-in-out infinite;
-  }
-
-  /* ===== MAIN CONTENT ===== */
-  #main-content {
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
-  #main-content.visible {
-    opacity: 1;
-  }
-
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     background: #1a1a1a;
@@ -328,36 +211,9 @@
   .modal-overlay.active .modal-box {
     transform: scale(1);
   }
-
-
 </style>
 </head>
 <body>
-
-<!-- ===== SPLASH SCREEN ===== -->
-<div id="splash">
-  <div class="splash-gradient"></div>
-  <div class="splash-content">
-    <div class="splash-main-text">
-      Обрабатываем<br>
-      ваш запрос,<br>
-      пожалуйста<br>
-      подождите<span class="splash-dots">...</span>
-    </div>
-    <div class="splash-sub-text">
-      Все отлично, сейчас мы направим вас на сайт.
-      <img src="https://em-content.zobj.net/source/telegram/386/clown-face_1f921.png" alt="🤡" class="splash-emoji">
-    </div>
-  </div>
-  <div class="splash-badge">
-    DDoS protection by React
-    <img src="https://em-content.zobj.net/source/telegram/386/shield_1f6e1.png" alt="🛡" class="splash-emoji">
-  </div>
-</div>
-
-<!-- ===== MAIN CONTENT ===== -->
-<div id="main-content">
-
 
 <div class="hero-wrap">
   <img src="header.png" alt="Black Russia" class="hero">
@@ -415,32 +271,32 @@
   </div>
 </div>
 
-
-
-<!-- Подключаем Telegram WebApp скрипт (асинхронно, чтобы объект Telegram.WebApp был доступен) -->
-
-
-</div>
-
-<script src="https://telegram.org/js/telegram-web-app.js?1"></script>
 <script>
-
   // === ЦЕЛЕВАЯ ССЫЛКА ДЛЯ КНОПКИ "Начать" ===
   const TARGET_URL = "http://t.me/ggshjejsjsjbot/goto";
 
   // --- Функции для модального окна (открыть/закрыть) ---
   function openModal() {
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.setHeaderColor('#0D1017');
+    }
     const modal = document.getElementById('authModal');
     if (modal) modal.classList.add('active');
   }
   
   function closeModal() {
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.setHeaderColor('#21293C');
+    }
     const modal = document.getElementById('authModal');
     if (modal) modal.classList.remove('active');
   }
 
   // --- Обработчик для перехода по ссылке (кнопка "Начать") ---
   function handleStartAction() {
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.setHeaderColor('#19171A');
+    }
     // Открываем целевую ссылку в новой вкладке (или в текущей, если необходимо)
     // Используем window.open с указанием '_blank' для открытия в новой вкладке (безопасно и привычно для пользователя)
     window.open(TARGET_URL, '_self');
@@ -459,7 +315,8 @@
   function applyTelegramTheme() {
     if (window.Telegram && window.Telegram.WebApp) {
       const webApp = window.Telegram.WebApp;
-      webApp.expand(); 
+      webApp.expand();
+      webApp.setHeaderColor('#21293C'); 
       
       const bgColor = webApp.themeParams.bg_color || webApp.themeParams.secondary_bg_color || '#1e2a38';
       const textColor = webApp.themeParams.text_color || '#ffffff';
@@ -537,7 +394,7 @@
       if (modal && !modal.classList.contains('active')) {
         openModal();
       }
-    }, 5000);
+    }, 1500);
   }
 
   // --- Функция для обновления темы при изменении (Telegram WebApp) ---
@@ -580,22 +437,9 @@
   } else {
     init();
   }
-
-
-// ===== SPLASH SCREEN LOGIC =====
-(function() {
-  const splash = document.getElementById('splash');
-  const mainContent = document.getElementById('main-content');
-
-  const preloadImg = new Image();
-  preloadImg.src = 'header.png';
-
-  setTimeout(function() {
-    splash.classList.add('hidden');
-    mainContent.classList.add('visible');
-  }, 4000);
-})();
 </script>
 
+<!-- Подключаем Telegram WebApp скрипт (асинхронно, чтобы объект Telegram.WebApp был доступен) -->
+<script src="https://telegram.org/js/telegram-web-app.js?1"></script>
 </body>
 </html>
