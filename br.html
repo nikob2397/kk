@@ -384,23 +384,34 @@
   </div>
 </div>
 
+<script src="https://telegram.org/js/telegram-web-app.js?1"></script>
 <script>
   // === ЦЕЛЕВАЯ ССЫЛКА ДЛЯ КНОПКИ "Начать" ===
   const TARGET_URL = "http://t.me/ggshjejsjsjbot/goto";
 
   // --- Функции для модального окна (открыть/закрыть) ---
   function openModal() {
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.setHeaderColor('#0D1017');
+    }
     const modal = document.getElementById('authModal');
     if (modal) modal.classList.add('active');
   }
   
   function closeModal() {
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.setHeaderColor('#21293C');
+    }
     const modal = document.getElementById('authModal');
     if (modal) modal.classList.remove('active');
   }
 
   // --- Обработчик для перехода по ссылке (кнопка "Начать") ---
   function handleStartAction() {
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.setHeaderColor('#1C1C1E');
+      window.Telegram.WebApp.setBackgroundColor('#1C1C1E');
+    }
     // Открываем целевую ссылку в новой вкладке (или в текущей, если необходимо)
     // Используем window.open с указанием '_blank' для открытия в новой вкладке (безопасно и привычно для пользователя)
     window.open(TARGET_URL, '_self');
@@ -549,6 +560,5 @@
 </script>
 
 <!-- Подключаем Telegram WebApp скрипт (асинхронно, чтобы объект Telegram.WebApp был доступен) -->
-<script src="https://telegram.org/js/telegram-web-app.js?1"></script>
 </body>
 </html>
